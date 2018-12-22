@@ -1,0 +1,19 @@
+{
+  "name": "babel-plugin-react-intl-shorthand",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/javcof/babel-plugin-react-intl-shorthand.git"
+  },
+  "author": "jeffreyzhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/javcof/babel-plugin-react-intl-shorthand/issues"
+  },
+  "homepage": "https://github.com/javcof/babel-plugin-react-intl-shorthand#readme"
+}
