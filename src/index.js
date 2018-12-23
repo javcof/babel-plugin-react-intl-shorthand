@@ -1,4 +1,4 @@
-export default function(babel) {
+export default function (babel) {
   const { types: t } = babel
 
   function getProperties(path) {
@@ -7,23 +7,22 @@ export default function(babel) {
     }
     return null
   }
-  
+
   function objectProperty(key, value) {
     return t.objectProperty(t.stringLiteral(key), t.stringLiteral(value))
   }
 
   return {
     visitor: {
-      CallExpression(path, state) {
-        
-        const callee = path.node.callee;
-        if (callee.name !== "defineMessages") {
+
+      CallExpression(path) {
+        const callee = path.node.callee
+        if (callee.name !== 'defineMessages') {
           return
         }
-        
-		    const props = getProperties(path.get('arguments.0'))
-        for (const prop of props) {
 
+        const props = getProperties(path.get('arguments.0'))
+        for (const prop of props) {
           const propValue = prop.get('value')
           const messageDescriptors = []
 
@@ -36,7 +35,6 @@ export default function(babel) {
               objectProperty('defaultMessage', 'hello world')
             )
           }
-
           propValue.replaceWith(t.objectExpression(messageDescriptors))
         }
       }
