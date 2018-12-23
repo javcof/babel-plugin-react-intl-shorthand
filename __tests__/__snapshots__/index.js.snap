@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`works 1`] = `
+"import { defineMessages } from 'react-intl';
+defineMessages({
+  test: {
+    \\"id\\": \\"1001\\",
+    \\"defaultMessage\\": \\"hello world\\"
+  },
+  hello: {
+    id: 'hello',
+    defaultMessage: 'hello world'
+  }
+});"
+`;

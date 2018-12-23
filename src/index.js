@@ -1,12 +1,17 @@
-function getProperties(path) {
-  if (path.isObjectExpression) {
-    return path.get('properties')
-  }
-  return null
-}
-
 export default function(babel) {
   const { types: t } = babel
+
+  function getProperties(path) {
+    if (path.isObjectExpression) {
+      return path.get('properties')
+    }
+    return null
+  }
+  
+  function objectProperty(key, value) {
+    return t.objectProperty(t.stringLiteral(key), t.stringLiteral(value))
+  }
+
   return {
     visitor: {
       CallExpression(path, state) {
@@ -18,19 +23,22 @@ export default function(babel) {
         
 		    const props = getProperties(path.get('arguments.0'))
         for (const prop of props) {
-          const propValue = prop.get('value')
-          if (t.isStringLiteral(propValue)) {
-            propValue.node.value = 'test'
-          } else if (t.isObjectExpression(propValue)) {                                     
-            const objProps = propValue.get('properties')
-            objProps.forEach((item) => {
-              item.get('value').node.value = 'test'
-            })
-          } else {
-            // others
-          }
-        }
 
+          const propValue = prop.get('value')
+          const messageDescriptors = []
+
+          if (propValue.isObjectExpression()) {
+            const objProps = propValue.get('properties')
+            objProps.forEach(item => messageDescriptors.push(item.node))
+          } else if (propValue.isStringLiteral()) {
+            messageDescriptors.push(
+              objectProperty('id', '1001'),
+              objectProperty('defaultMessage', 'hello world')
+            )
+          }
+
+          propValue.replaceWith(t.objectExpression(messageDescriptors))
+        }
       }
     }
   }
