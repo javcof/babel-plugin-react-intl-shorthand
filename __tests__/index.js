@@ -1,5 +1,8 @@
+import path from 'path'
 import { transform } from '@babel/core'
 import plugin from '../src'
+
+const filename = path.resolve(__dirname, 'index.js')
 
 it('works', () => {
 
@@ -16,6 +19,7 @@ it('works', () => {
   `
   const options = {
     plugins: [plugin],
+    filename,
   }
 
   const { code } = transform(example, options);

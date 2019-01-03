@@ -1,11 +1,30 @@
+import p from 'path'
+
 export default function (babel) {
   const { types: t } = babel
+  const REG = new RegExp(`\\${p.sep}`, 'g')
 
   function getProperties(path) {
     if (path.isObjectExpression) {
       return path.get('properties')
     }
     return null
+  }
+
+  function dotPath(path) {
+    return path.replace(REG, '.')
+  }
+
+  function getPrefix(state) {
+    const {
+      file: {
+        opts: { filename },
+      }
+    } = state
+    const file = p.relative(state.cwd, filename)
+    const formatted = dotPath(file.replace(/\..+$/, ''))
+
+    return formatted
   }
 
   function objectProperty(key, value) {
@@ -15,7 +34,7 @@ export default function (babel) {
   return {
     visitor: {
 
-      CallExpression(path) {
+      CallExpression(path, state) {
         const callee = path.node.callee
         if (callee.name !== 'defineMessages') {
           return
@@ -23,6 +42,7 @@ export default function (babel) {
 
         const props = getProperties(path.get('arguments.0'))
         for (const prop of props) {
+          const propKey = prop.get('key')
           const propValue = prop.get('value')
           const messageDescriptors = []
 
@@ -31,8 +51,8 @@ export default function (babel) {
             objProps.forEach(item => messageDescriptors.push(item.node))
           } else if (propValue.isStringLiteral()) {
             messageDescriptors.push(
-              objectProperty('id', '1001'),
-              objectProperty('defaultMessage', 'hello world')
+              objectProperty('id', `${getPrefix(state)}.${propKey.node.name}`),
+              objectProperty('defaultMessage', propValue.node.value)
             )
           }
           propValue.replaceWith(t.objectExpression(messageDescriptors))

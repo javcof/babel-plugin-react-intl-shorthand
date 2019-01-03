@@ -1,11 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`works 1`] = `
-"import { defineMessages } from 'react-intl';
-defineMessages({
+"\\"use strict\\";
+
+var _reactIntl = require(\\"react-intl\\");
+
+(0, _reactIntl.defineMessages)({
   test: {
-    \\"id\\": \\"1001\\",
-    \\"defaultMessage\\": \\"hello world\\"
+    \\"id\\": \\"__tests__.index.test\\",
+    \\"defaultMessage\\": \\"test message\\"
   },
   hello: {
     id: 'hello',
