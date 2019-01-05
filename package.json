@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "babel src -d lib",
     "test": "jest -u",
     "eslint": "eslint src/"
   },
@@ -18,9 +19,11 @@
   },
   "homepage": "https://github.com/javcof/babel-plugin-react-intl-shorthand#readme",
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
+    "@babel/types": "^7.2.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "eslint": "^5.11.0",
