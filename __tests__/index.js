@@ -1,11 +1,10 @@
 import path from 'path'
-import { transform } from '@babel/core'
+import { transform } from 'babel-core'
 import plugin from '../src'
 
 const filename = path.resolve(__dirname, 'index.js')
 
 it('works', () => {
-
   const example = `
     import { defineMessages } from 'react-intl'
 

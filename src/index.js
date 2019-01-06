@@ -1,39 +1,38 @@
 import p from 'path'
+import * as t from 'babel-types'
 
-export default function (babel) {
-  const { types: t } = babel
-  const REG = new RegExp(`\\${p.sep}`, 'g')
+const REG = new RegExp(`\\${p.sep}`, 'g')
 
-  function getProperties(path) {
-    if (path.isObjectExpression) {
-      return path.get('properties')
+function getProperties(path) {
+  if (path.isObjectExpression) {
+    return path.get('properties')
+  }
+  return null
+}
+
+function dotPath(path) {
+  return path.replace(REG, '.')
+}
+
+function getPrefix(state) {
+  const {
+    file: {
+      opts: { filename },
     }
-    return null
-  }
+  } = state
+  const file = p.relative(process.cwd(), filename)
+  const formatted = dotPath(file.replace(/\..+$/, ''))
 
-  function dotPath(path) {
-    return path.replace(REG, '.')
-  }
+  return formatted
+}
 
-  function getPrefix(state) {
-    const {
-      file: {
-        opts: { filename },
-      }
-    } = state
-    const file = p.relative(state.cwd, filename)
-    const formatted = dotPath(file.replace(/\..+$/, ''))
+function objectProperty(key, value) {
+  return t.objectProperty(t.stringLiteral(key), t.stringLiteral(value))
+}
 
-    return formatted
-  }
-
-  function objectProperty(key, value) {
-    return t.objectProperty(t.stringLiteral(key), t.stringLiteral(value))
-  }
-
+export default function () {
   return {
     visitor: {
-
       CallExpression(path, state) {
         const callee = path.node.callee
         if (callee.name !== 'defineMessages') {
@@ -59,5 +58,5 @@ export default function (babel) {
         }
       }
     }
-  }
+  };
 }

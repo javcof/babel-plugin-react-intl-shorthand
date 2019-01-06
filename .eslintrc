@@ -9,6 +9,8 @@
     "semi": ["off"],
     "comma-dangle": ["off"],
     "prefer-destructuring": ["off"],
-    "no-restricted-syntax": ["off"]
+    "no-restricted-syntax": ["off"],
+    "no-console": ["off"],
+    "import/no-extraneous-dependencies": ["off"]
   }
 }

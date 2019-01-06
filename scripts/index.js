@@ -1,4 +1,4 @@
-import { transform } from '@babel/core';
+import { transform } from 'babel-core';
 
 const code = `
 import { defineMessages } from 'react-intl'
