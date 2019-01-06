@@ -1,5 +1,8 @@
 {
   "extraBabelPlugins": [
-    ["react-intl-auto"]
+    ["react-intl-auto"],
+    ["react-intl", {
+      "messagesDir": "./build/messages/"
+    }]
   ]
 }

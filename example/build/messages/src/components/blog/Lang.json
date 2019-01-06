@@ -1,0 +1,11 @@
+[
+  {
+    "id": "components.blog.hello",
+    "description": "Message to greet the user",
+    "defaultMessage": "Hello, jerryz"
+  },
+  {
+    "id": "src.components.blog.world",
+    "defaultMessage": "Hello tom."
+  }
+]
