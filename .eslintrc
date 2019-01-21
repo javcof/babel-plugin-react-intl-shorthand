@@ -11,6 +11,8 @@
     "prefer-destructuring": ["off"],
     "no-restricted-syntax": ["off"],
     "no-console": ["off"],
-    "import/no-extraneous-dependencies": ["off"]
+    "import/no-extraneous-dependencies": ["off"],
+    "operator-linebreak": ["off"],
+    "no-param-reassign": ["off"]
   }
 }

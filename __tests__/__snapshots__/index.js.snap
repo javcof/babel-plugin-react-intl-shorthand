@@ -6,13 +6,9 @@ exports[`works 1`] = `
 var _reactIntl = require('react-intl');
 
 (0, _reactIntl.defineMessages)({
-    test: {
-        'id': '__tests__.index.test',
-        'defaultMessage': 'test message'
-    },
-    hello: {
-        id: 'hello',
-        defaultMessage: 'hello world'
-    }
+  hello: {
+    id: 'hello',
+    defaultMessage: 'hello world'
+  }
 });"
 `;
