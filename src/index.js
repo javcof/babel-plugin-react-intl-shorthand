@@ -1,24 +1,27 @@
+import * as p from 'path'
+
 const FUNCTION_NAMES = [
   'defineMessages',
 ]
 
 const DESCRIPTOR_PROPS = new Set(['id', 'description', 'defaultMessage'])
+const REG_SEP = new RegExp(`\\${p.sep}`, 'g')
 
 export default function ({ types: t }) {
   function getModuleSourceName(opts) {
     return opts.moduleSourceName || 'react-intl'
   }
 
-  function evaluatePath(path) {
-    const evaluated = path.evaluate();
-    if (evaluated.confident) {
-      return evaluated.value
-    }
+  // function evaluatePath(path) {
+  //   const evaluated = path.evaluate();
+  //   if (evaluated.confident) {
+  //     return evaluated.value
+  //   }
 
-    throw path.buildCodeFrameError(
-      '[React Intl] Messages must be statically evaluate-able for extraction.'
-    )
-  }
+  //   throw path.buildCodeFrameError(
+  //     '[React Intl] Messages must be statically evaluate-able for extraction.'
+  //   )
+  // }
 
   function referencesImport(path, mod, importedNames) {
     if (!(path.isIdentifier() || path.isJSXIdentifier())) {
@@ -73,6 +76,18 @@ export default function ({ types: t }) {
         const moduleSourceName = getModuleSourceName(state.opts)
         const callee = path.get('callee')
 
+        function generateMessageDescriptorKey() {
+          const {
+            file: {
+              opts: { filename },
+            }
+          } = state
+          const file = p.relative(process.cwd(), filename)
+          const formatted = file.replace(/\..+$/, '').replace(REG_SEP, '.')
+      
+          return formatted
+        }
+
         function assertObjectExpression(node) {
           if (!(node && node.isObjectExpression())) {
             throw path.buildCodeFrameError(
@@ -84,8 +99,21 @@ export default function ({ types: t }) {
           }
         }
 
+        function processLiteral(message) {
+          message.replaceWith(t.objectExpression([
+            t.objectProperty(
+              t.stringLiteral('id'),
+              t.stringLiteral(generateMessageDescriptorKey())
+            ),
+            t.objectProperty(
+              t.stringLiteral('defaultMessage'),
+              t.stringLiteral(message.node.value)
+            )
+          ]))
+        }
+
         function processMessageObject(messageObj) {
-          // assertObjectExpression(messageObj)
+          assertObjectExpression(messageObj)
 
 
           const properties = messageObj.get('properties')
@@ -96,20 +124,18 @@ export default function ({ types: t }) {
               prop.get('value'),
             ])
           )
-
           descriptor = evaluateMessageDescriptor(descriptor);
-          console.log(descriptor)
 
-          // messageObj.replaceWith(t.objectExpression([
-          //   t.objectProperty(
-          //     t.stringLiteral('id'),
-          //     t.stringLiteral(descriptor.id)
-          //   ),
-          //   t.objectProperty(
-          //     t.stringLiteral('defaultMessage'),
-          //     t.stringLiteral(descriptor.defaultMessage)
-          //   )
-          // ]))
+          messageObj.replaceWith(t.objectExpression([
+            t.objectProperty(
+              t.stringLiteral('id'),
+              t.stringLiteral(descriptor.id)
+            ),
+            t.objectProperty(
+              t.stringLiteral('defaultMessage'),
+              t.stringLiteral(descriptor.defaultMessage)
+            )
+          ]))
         }
 
         if (referencesImport(callee, moduleSourceName, FUNCTION_NAMES)) {
@@ -119,7 +145,13 @@ export default function ({ types: t }) {
 
           messagesObj.get('properties')
             .map(prop => prop.get('value'))
-            .forEach(processMessageObject)
+            .forEach((item) => {
+              if (item.isLiteral()) {
+                processLiteral(item)
+              } else {
+                processMessageObject(item)
+              }
+            })
         }
       }
     }

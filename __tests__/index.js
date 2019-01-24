@@ -9,6 +9,7 @@ it('works', () => {
     import { defineMessages } from 'react-intl'
 
     defineMessages({
+        test: 'test message',
         hello: {
           id: 'hello',
           defaultMessage: 'hello world',
