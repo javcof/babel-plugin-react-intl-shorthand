@@ -76,7 +76,7 @@ export default function ({ types: t }) {
         const moduleSourceName = getModuleSourceName(state.opts)
         const callee = path.get('callee')
 
-        function generateMessageDescriptorKey() {
+        function generateMessageDescriptorKey(message) {
           const {
             file: {
               opts: { filename },
@@ -84,8 +84,10 @@ export default function ({ types: t }) {
           } = state
           const file = p.relative(process.cwd(), filename)
           const formatted = file.replace(/\..+$/, '').replace(REG_SEP, '.')
-      
-          return formatted
+          const parent = message.find(item => item.isProperty())
+          const keyPath = parent.get('key')
+
+          return `${formatted}.${keyPath.node.name}`
         }
 
         function assertObjectExpression(node) {
@@ -103,7 +105,7 @@ export default function ({ types: t }) {
           message.replaceWith(t.objectExpression([
             t.objectProperty(
               t.stringLiteral('id'),
-              t.stringLiteral(generateMessageDescriptorKey())
+              t.stringLiteral(generateMessageDescriptorKey(message))
             ),
             t.objectProperty(
               t.stringLiteral('defaultMessage'),

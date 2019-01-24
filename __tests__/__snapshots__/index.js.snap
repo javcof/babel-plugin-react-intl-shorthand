@@ -7,7 +7,7 @@ var _reactIntl = require('react-intl');
 
 (0, _reactIntl.defineMessages)({
     test: {
-        'id': '__tests__.index',
+        'id': '__tests__.index.test',
         'defaultMessage': 'test message'
     },
     hello: {
