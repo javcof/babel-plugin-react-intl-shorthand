@@ -14,6 +14,9 @@ it('works', () => {
           id: 'hello',
           defaultMessage: 'hello world',
         },
+        title: {
+          defaultMessage: 'title message',
+        },
     })
   `
   const options = {

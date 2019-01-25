@@ -70,25 +70,38 @@ export default function ({ types: t }) {
     return descriptor
   }
 
+  function replaceMessageDescriptor(path, descriptor) {
+    path.replaceWith(t.objectExpression([
+      t.objectProperty(
+        t.stringLiteral('id'),
+        t.stringLiteral(descriptor.id)
+      ),
+      t.objectProperty(
+        t.stringLiteral('defaultMessage'),
+        t.stringLiteral(descriptor.defaultMessage)
+      )
+    ]))
+  }
+
+  function generateMessageDescriptorKey(path, state) {
+    const {
+      file: {
+        opts: { filename },
+      }
+    } = state
+    const file = p.relative(process.cwd(), filename)
+    const formatted = file.replace(/\..+$/, '').replace(REG_SEP, '.')
+    const parent = path.find(item => item.isProperty())
+    const keyPath = parent.get('key')
+
+    return `${formatted}.${keyPath.node.name}`
+  }
+
   return {
     visitor: {
       CallExpression(path, state) {
         const moduleSourceName = getModuleSourceName(state.opts)
         const callee = path.get('callee')
-
-        function generateMessageDescriptorKey(message) {
-          const {
-            file: {
-              opts: { filename },
-            }
-          } = state
-          const file = p.relative(process.cwd(), filename)
-          const formatted = file.replace(/\..+$/, '').replace(REG_SEP, '.')
-          const parent = message.find(item => item.isProperty())
-          const keyPath = parent.get('key')
-
-          return `${formatted}.${keyPath.node.name}`
-        }
 
         function assertObjectExpression(node) {
           if (!(node && node.isObjectExpression())) {
@@ -102,21 +115,16 @@ export default function ({ types: t }) {
         }
 
         function processLiteral(message) {
-          message.replaceWith(t.objectExpression([
-            t.objectProperty(
-              t.stringLiteral('id'),
-              t.stringLiteral(generateMessageDescriptorKey(message))
-            ),
-            t.objectProperty(
-              t.stringLiteral('defaultMessage'),
-              t.stringLiteral(message.node.value)
-            )
-          ]))
+          const descriptor = {
+            id: generateMessageDescriptorKey(message, state),
+            defaultMessage: message.node.value,
+          }
+
+          replaceMessageDescriptor(message, descriptor)
         }
 
         function processMessageObject(messageObj) {
           assertObjectExpression(messageObj)
-
 
           const properties = messageObj.get('properties')
 
@@ -126,18 +134,13 @@ export default function ({ types: t }) {
               prop.get('value'),
             ])
           )
-          descriptor = evaluateMessageDescriptor(descriptor);
 
-          messageObj.replaceWith(t.objectExpression([
-            t.objectProperty(
-              t.stringLiteral('id'),
-              t.stringLiteral(descriptor.id)
-            ),
-            t.objectProperty(
-              t.stringLiteral('defaultMessage'),
-              t.stringLiteral(descriptor.defaultMessage)
-            )
-          ]))
+          descriptor = evaluateMessageDescriptor(descriptor)
+          if (typeof descriptor.id === 'undefined') {
+            descriptor.id = generateMessageDescriptorKey(messageObj, state)
+          }
+
+          replaceMessageDescriptor(messageObj, descriptor)
         }
 
         if (referencesImport(callee, moduleSourceName, FUNCTION_NAMES)) {
