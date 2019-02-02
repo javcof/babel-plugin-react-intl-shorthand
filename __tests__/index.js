@@ -20,7 +20,14 @@ it('works', () => {
     })
   `
   const options = {
-    plugins: [plugin],
+    plugins: [
+      [
+        plugin,
+        {
+          hashKey: false,
+        }
+      ]
+    ],
     filename,
   }
 

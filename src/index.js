@@ -1,4 +1,5 @@
 import * as p from 'path'
+import murmur from 'murmurhash3js'
 
 const FUNCTION_NAMES = [
   'defineMessages',
@@ -86,7 +87,12 @@ export default function ({ types: t }) {
   function generateMessageDescriptorKey(path, state) {
     const {
       file: {
-        opts: { filename },
+        opts: {
+          filename,
+        },
+      },
+      opts: {
+        hashKey,
       }
     } = state
     const file = p.relative(process.cwd(), filename)
@@ -94,7 +100,9 @@ export default function ({ types: t }) {
     const parent = path.find(item => item.isProperty())
     const keyPath = parent.get('key')
 
-    return `${formatted}.${keyPath.node.name}`
+    return hashKey ?
+      murmur.x86.hash32(`${formatted}.${keyPath.node.name}`).toString() :
+      `${formatted}.${keyPath.node.name}`
   }
 
   return {
