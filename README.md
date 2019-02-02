@@ -1,6 +1,6 @@
 # babel-plugin-react-intl-shorthand
 
-Make u write react-intl message descriptor more easy.
+Make u write react-intl message descriptor more easy, reduce runtime code size.
 
 ## Dependencies
 
@@ -35,7 +35,7 @@ $ npm install babel-plugin-react-intl-shorthand
 ```json
 {
   "extraBabelPlugins": [
-    ["react-intl-shorthand"],
+    ["react-intl-shorthand", { "useHash": true }],
     ["react-intl", {
       "messagesDir": "./build/messages/"
     }]
@@ -44,6 +44,7 @@ $ npm install babel-plugin-react-intl-shorthand
 ```
 
 ### Options
+- **`useHash`**: Use MurmurHash algorithms, reduce runtime code size.
 - **`moduleSourceName`**: The ES6 module source name of the React Intl package. Defaults to: `"react-intl"`, but can be changed to another name/path to React Intl.
 
 

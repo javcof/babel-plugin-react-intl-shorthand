@@ -1,5 +1,5 @@
 import * as p from 'path'
-import murmur from 'murmurhash3js'
+import { murmur3Hash } from './util'
 
 const FUNCTION_NAMES = [
   'defineMessages',
@@ -101,7 +101,7 @@ export default function ({ types: t }) {
     const keyPath = parent.get('key')
     const keyFormatted = `${formatted}.${keyPath.node.name}`
 
-    return useHash ? murmur.x86.hash32(keyFormatted).toString() : keyFormatted
+    return useHash ? murmur3Hash(keyFormatted).toString() : keyFormatted
   }
 
   return {
