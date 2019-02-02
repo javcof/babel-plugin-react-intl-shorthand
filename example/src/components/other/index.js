@@ -5,6 +5,8 @@ const Lang = defineMessages({
   hello: 'other hello',
   world: 'other world',
   title: 'title message',
+  bar: 'bar message',
+  other: 'other message',
 })
 
 export default class Other extends React.Component {

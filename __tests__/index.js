@@ -24,7 +24,7 @@ it('works', () => {
       [
         plugin,
         {
-          hashKey: false,
+          useHash: true,
         }
       ]
     ],

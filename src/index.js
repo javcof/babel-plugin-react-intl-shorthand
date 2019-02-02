@@ -92,17 +92,16 @@ export default function ({ types: t }) {
         },
       },
       opts: {
-        hashKey,
+        useHash,
       }
     } = state
     const file = p.relative(process.cwd(), filename)
     const formatted = file.replace(/\..+$/, '').replace(REG_SEP, '.')
     const parent = path.find(item => item.isProperty())
     const keyPath = parent.get('key')
+    const keyFormatted = `${formatted}.${keyPath.node.name}`
 
-    return hashKey ?
-      murmur.x86.hash32(`${formatted}.${keyPath.node.name}`).toString() :
-      `${formatted}.${keyPath.node.name}`
+    return useHash ? murmur.x86.hash32(keyFormatted).toString() : keyFormatted
   }
 
   return {
