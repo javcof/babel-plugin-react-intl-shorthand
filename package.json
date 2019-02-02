@@ -19,13 +19,10 @@
   },
   "homepage": "https://github.com/javcof/babel-plugin-react-intl-shorthand#readme",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "@babel/types": "^7.2.2",
-    "babel-core": "7.0.0-bridge.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
     "eslint": "^5.11.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -33,5 +30,9 @@
     "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0",
     "regenerator-runtime": "^0.13.1"
+  },
+  "dependencies": {
+    "babel-types": "^6.26.0",
+    "murmurhash3js": "^3.0.1"
   }
 }
