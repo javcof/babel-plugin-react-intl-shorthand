@@ -1,22 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`works 1`] = `
-"'use strict';
+"\\"use strict\\";
 
-var _reactIntl = require('react-intl');
+var _reactIntl = require(\\"react-intl\\");
 
 (0, _reactIntl.defineMessages)({
   test: {
-    'id': 'EC7q1Q==',
-    'defaultMessage': 'test message'
+    \\"id\\": \\"EC7q1Q==\\",
+    \\"defaultMessage\\": \\"test message\\"
   },
   hello: {
-    'id': 'hello',
-    'defaultMessage': 'hello world'
+    \\"id\\": \\"hello\\",
+    \\"defaultMessage\\": \\"hello world\\"
   },
   title: {
-    'id': 'dnJZ/w==',
-    'defaultMessage': 'title message'
+    \\"id\\": \\"dnJZ/w==\\",
+    \\"defaultMessage\\": \\"title message\\"
   }
 });"
 `;
