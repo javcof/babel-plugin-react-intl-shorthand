@@ -6,5 +6,6 @@ export default defineMessages({
     defaultMessage: 'Hello, jerryz',
     description: 'Message to greet the user',
   },
-  world: 'Hello tom.'
+  world: 'Hello tom.',
+  s: 's'
 })
